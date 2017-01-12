@@ -43,7 +43,7 @@ export default Ember.Controller.extend({
           this.set('price', '');
           this.set('action', 'buy');
         });
-        this.notify.success(`Trade complete for ${quantity} of ${symbol.toUpperCase()} @ ${price}`)
+        this.notify.success(`Trade complete for ${quantity} of ${symbol.toUpperCase()} @ ${price}`);
       })
       .fail((err) => this.notify.error(err.responseJSON.message));
     }

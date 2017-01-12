@@ -15,7 +15,7 @@ export default Ember.Route.extend({
       s.dividend_yield = s.dividend_yield ? s.dividend_yield.toFixed(3) : s.dividend_yield;
     });
     controller.set('model', model.stocks);
-    controller.set('asi', model.asi.all_share_index.toFixed(3))
+    controller.set('asi', model.asi.all_share_index.toFixed(3));
     controller.set('action', 'buy');
   }
 });
