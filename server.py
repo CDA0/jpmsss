@@ -70,8 +70,12 @@ class Api(object):
             cherrypy.response.status = 404
             return {'status': 404, 'message': 'SymbolNotFound'}
 
-        gbce.trade(stock, data['quantity'], data['price'], data['action'])
-        cherrypy.response.status = 204
+        try:
+            gbce.trade(stock, data['quantity'], data['price'], data['action'])
+            cherrypy.response.status = 204
+        except:
+            cherrypy.response.status = 400
+            return {'status': 400, 'message': 'ValueError'}
         return
 
     @cherrypy.expose
@@ -101,8 +105,17 @@ gbce = GBCE()
 load_fixtures()
 
 if __name__ == '__main__':
-    def CORS():
-        cherrypy.response.headers["Access-Control-Allow-Origin"] = "*"
+    def cors():
+        if cherrypy.request.method == 'OPTIONS':
+            # preflight request
+            # see http://www.w3.org/TR/cors/#cross-origin-request-with-preflight-0
+            cherrypy.response.headers['Access-Control-Allow-Methods'] = 'POST'
+            cherrypy.response.headers['Access-Control-Allow-Headers'] = 'content-type'
+            cherrypy.response.headers['Access-Control-Allow-Origin']  = '*'
+            # tell CherryPy no avoid normal handler
+            return True
+        else:
+            cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
     cherrypy.config.update({'server.socket_port': 9090})
-    cherrypy.tools.CORS = cherrypy.Tool('before_handler', CORS)
-    cherrypy.quickstart(Root(), '/', config={ '/': { 'tools.CORS.on': True }})
+    cherrypy.tools.cors = cherrypy._cptools.HandlerTool(cors)
+    cherrypy.quickstart(Root(), '/', config={ '/': { 'tools.cors.on': True }})

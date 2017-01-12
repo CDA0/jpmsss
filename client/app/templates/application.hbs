@@ -1,7 +1,10 @@
 {{ember-notify}}
 <div class="container">
-  <div class="row">
-    <h1 class="text-center">Super Simple Stocks</h1>
+  <div class="row text-center">
+    <h1 class="">Super Simple Stocks</h1>
+    <div class="row">
+      <h4>All Share Index: <small>{{asi}}</small></h4>
+    </div>
   </div>
 
   <hr>
@@ -9,44 +12,61 @@
     {{#bs-form formLayout='inline' model=this onSubmit=(action "trade") as |form|}}
       {{form.element controlType="text" label="Symbol" placeholder="Symbol" property="symbol" required=true}}
       {{form.element controlType="text" label="Price" placeholder="Price" property="price" required=true}}
-      {{form.element controlType="text" label="Quantity" placeholder="Quantity" property="password" required=true}}
-      {{#bs-button-group value=buttonGroupValue2 onChange=(action (mut buttonGroupValue2))  required=true type="radio" as |bg|}}
-        {{#bg.button type="default" value=1}}Buy{{/bg.button}}
-        {{#bg.button type="default" value=2}}Sell{{/bg.button}}
+      {{form.element controlType="text" label="Quantity" placeholder="Quantity" property="quantity" required=true}}
+      {{#bs-button-group value=action onChange=(action (mut action)) required=true type="radio" as |bg|}}
+        {{#bg.button type="default" value='buy'}}Buy{{/bg.button}}
+        {{#bg.button type="default" value='sell'}}Sell{{/bg.button}}
       {{/bs-button-group}}
       {{bs-button defaultText="Submit" type="primary" buttonType="submit"}}
   {{/bs-form}}
   </div>
 
   <hr>
-  <div class="row text-center">
-    {{bs-button defaultText="Refresh" type="primary" onClick=(action "refresh")}}
-  </div>
-
-  <hr>
 
   {{#each model as |stock|}}
     <div class="row">
-      <h3>{{stock.symbol}}</h3>
+      <h4>{{stock.symbol}} <small>{{stock.type}}</small></h4>
     </div>
     <div class="row">
-      <table class="table">
-        <thead>
-          <th>Ticker Price</th>
-          <th>Divided</th>
-          <th>Par</th>
-          <th>Dividend Yield</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{stock.ticker_price}}</td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="col-md-5">
+        <table class="table table-condensed">
+          <thead>
+            <th class="col-md-3">Ticker Price</th>
+            <th class="col-md-3">Divided Yield</th>
+            <th class="col-md-3">P/E Ratio</th>
+            <th class="col-md-3">Price</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="col-md-3">{{stock.ticker_price}}</td>
+              <td class="col-md-3">{{stock.dividend_yield}}</td>
+              <td class="col-md-3">{{stock.pe_ratio}}</td>
+              <td class="col-md-3">{{stock.price}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-7">
+        <table class="table table-condensed">
+          <thead>
+            <th class="col-md-3">Timestamp</th>
+            <th class="col-md-3">Quantity</th>
+            <th class="col-md-3">Price</th>
+            <th class="col-md-3">Action</th>
+          </thead>
+          <tbody>
+            {{#each stock.trades as |trade|}}
+              <tr>
+                <td class="col-md-3">{{trade.timestamp}}</td>
+                <td class="col-md-3">{{trade.quantity}}</td>
+                <td class="col-md-3">{{trade.price}}</td>
+                <td class="col-md-3">{{trade.action}}</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
     </div>
     <hr>
-{{/each}}
+  {{/each}}
 </div>

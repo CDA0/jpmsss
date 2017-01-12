@@ -50,4 +50,4 @@ class GBCE(object):
         """
         :return all stocks as JSON
         """
-        return list(stock.as_dict() for stock in self.stocks)
+        return [stock.as_dict() for stock in self.stocks]

@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+import time
+from super_simple_stocks import Trade
 
 DEFAULT_TICKER_PRICE = 1
 DEFAULT_TIME_PERIOD = 60 * 15
@@ -17,6 +19,7 @@ class Stock(ABC):
         self.par = par
         self.ticker_price = DEFAULT_TICKER_PRICE
         self.trades = []
+        self.type = self.__class__.__name__.split('Stock')[0]
 
     @property
     @abstractmethod
@@ -77,8 +80,9 @@ class Stock(ABC):
         d = self.__dict__.copy()
         d['dividend_yield'] =  self.dividend_yield
         d['pe_ratio'] = self.pe_ratio
-        d['trades'] = list([trade.__dict__ for trade in self.trades])
+        d['trades'] = [trade.__dict__ for trade in self.trades]
         d['price'] = self.price()
+        d['type'] = self.type
         return d
 
 
