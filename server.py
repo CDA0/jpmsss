@@ -13,7 +13,7 @@ FIXTURES = [
 class Api(object):
 
     def RepresentsInt(self, s):
-        try: 
+        try:
             int(s)
             return True
         except ValueError:
@@ -23,8 +23,8 @@ class Api(object):
         return isinstance(symbol, str) and len(symbol) == 3
 
     def validate_trade(self, data):
-        return ((set(data.keys()) & set(['quantity', 'price', 'symbol', 'action'])) and 
-            self.RepresentsInt(data['price']) and 
+        return ((set(data.keys()) & set(['quantity', 'price', 'symbol', 'action'])) and
+            self.RepresentsInt(data['price']) and
             self.RepresentsInt(data['quantity']) and
             isinstance(data['symbol'], str) and len(data['symbol']) == 3 and
             data['action'].upper() in ['BUY', 'SELL'])
@@ -101,6 +101,8 @@ gbce = GBCE()
 load_fixtures()
 
 if __name__ == '__main__':
+    def CORS():
+        cherrypy.response.headers["Access-Control-Allow-Origin"] = "*"
     cherrypy.config.update({'server.socket_port': 9090})
-
-    cherrypy.quickstart(Root(), '/')
+    cherrypy.tools.CORS = cherrypy.Tool('before_handler', CORS)
+    cherrypy.quickstart(Root(), '/', config={ '/': { 'tools.CORS.on': True }})
